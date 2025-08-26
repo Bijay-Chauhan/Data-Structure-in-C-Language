@@ -1,0 +1,94 @@
+//Write the linked list code to find the N/3 of the number...
+
+//...................input................................
+// Enter a number, you want take the size of node: 8
+// Enter your 1 data: 1
+// Enter your 2 data: 2
+// Enter your 3 data: 3
+// Enter your 4 data: 4
+// Enter your 5 data: 5
+// Enter your 6 data: 6
+// Enter your 7 data: 7
+// Enter your 8 data: 8
+
+//..................output................................
+// The N/3 node of the list is: 3
+// The element list is :
+// 1 ->2 ->3 ->4 ->5 ->6 ->7 ->8 ->NULL
+
+#include <stdio.h>
+#include<stdlib.h>
+//structure definition..
+typedef struct node{
+    int data;
+    struct node *next;
+}node;
+node *head = NULL;
+
+//function definition..........
+void insertEnd(int val);
+node *createNode(int val);
+void printList();
+void NByThreeNode();;
+
+//main function....
+int main() {
+    int n, val;
+    printf("\nEnter a number, you want take the size of node: ");
+    scanf("%d", &n);
+    for(int i=0; i<n; i++){
+        printf("\nEnter your %d data: ", i+1);
+        scanf("%d", &val);
+        insertEnd(val);
+    }
+    NByThreeNode();
+    printList();
+return 0;
+}
+//create the node...
+node *createNode(int val){
+    node *newNode = (node*)malloc(sizeof(node));
+    newNode->data = val;
+    newNode->next = NULL;
+    return newNode;
+}
+
+//insert at the end.....
+void insertEnd(int val){
+    node *newNode = createNode(val);
+    if(head == NULL){
+        head = newNode;
+        return;
+    }
+    node *temp = head;
+    while(temp->next != NULL){
+        temp = temp->next;
+    }
+    temp->next = newNode;
+}
+//print the data inside the node...
+void printList(){
+    node *temp = head;
+    printf("\nThe element list is :\n");
+    while(temp != NULL){
+        printf("%d ->",temp->data);
+        temp = temp->next;
+    }
+    printf("NULL");
+}
+//find the middle of the node function....
+void NByThreeNode() {
+    node *temp = head;
+    node *slow = head;
+    int count = 0;
+
+    while (temp != NULL) {
+        count++;
+        if (count % 3 == 0 && slow->next != NULL) {
+            slow = slow->next;
+        }
+        temp = temp->next;
+    }
+
+    printf("\nThe N/3 node of the list is: %d\n", slow->data);
+}
