@@ -1,0 +1,91 @@
+//Write the linked list code to find the N/3 of the number...
+
+//...................input................................
+// Enter a number, you want take the size of node: 4
+// Enter your 1 data: 11
+// Enter your 2 data: 12
+// Enter your 3 data: 13
+// Enter your 4 data: 14
+// Enter a index, you want to find from last index :2
+
+//..................output................................
+// The number is: 13
+// The element list is :
+// 11 ->12 ->13 ->14 ->NULL
+
+#include <stdio.h>
+#include<stdlib.h>
+//structure definition..
+typedef struct node{
+    int data;
+    struct node *next;
+}node;
+node *head = NULL;
+
+//function definition..........
+void insertEnd(int val);
+node *createNode(int val);
+void printList();
+void findKFromLast();;
+
+//main function....
+int main() {
+    int n, val;
+    printf("\nEnter a number, you want take the size of node: ");
+    scanf("%d", &n);
+    for(int i=0; i<n; i++){
+        printf("\nEnter your %d data: ", i+1);
+        scanf("%d", &val);
+        insertEnd(val);
+    }
+    findKFromLast();
+    printList();
+return 0;
+}
+//create the node...
+node *createNode(int val){
+    node *newNode = (node*)malloc(sizeof(node));
+    newNode->data = val;
+    newNode->next = NULL;
+    return newNode;
+}
+
+//insert at the end.....
+void insertEnd(int val){
+    node *newNode = createNode(val);
+    if(head == NULL){
+        head = newNode;
+        return;
+    }
+    node *temp = head;
+    while(temp->next != NULL){
+        temp = temp->next;
+    }
+    temp->next = newNode;
+}
+//print the data inside the node...
+void printList(){
+    node *temp = head;
+    printf("\nThe element list is :\n");
+    while(temp != NULL){
+        printf("%d ->",temp->data);
+        temp = temp->next;
+    }
+    printf("NULL");
+}
+//find the kth of the last node function....
+void findKFromLast(){
+    node *fast, *slow;
+    fast = slow = head;
+    int k;
+    printf("\nEnter a index, you want to find from last index :");
+    scanf("%d", &k);
+    for(int i=0;i<k-1;i++){
+        fast = fast->next;
+    }
+    while(fast != NULL && fast->next != NULL){
+        fast = fast->next;
+        slow = slow->next;
+    }
+    printf("\nThe number is: %d", slow->data);
+}
