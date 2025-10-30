@@ -1,0 +1,281 @@
+//Qn. Extended BST with more options ....
+// ------ Binary Search Tree Menu ------
+// 0. Quit
+// 1. Create
+// 2. In-order Traversal
+// 3. Pre-order Traversal
+// 4. Post-order Traversal
+// 5. Search
+// 6. Find Smallest Element
+// 7. Find Largest Element
+// 8. Delete Tree
+// 9. Count Leaf Nodes
+// 10. Count Non-Leaf Nodes
+// 11. Count All Nodes
+// 12. Sum of All Nodes
+// 13. Print Depth of Tree
+// 14. Nodes at Maximum Depth
+// ------------------------------------
+// Enter your choice: 14
+// Nodes at maximum depth (0): 
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *left, *right;
+};
+
+// Create new node
+struct node* createNode(int value) {
+    struct node* newNode = (struct node*)malloc(sizeof(struct node));
+    newNode->data = value;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+// Insert into BST
+struct node* insert(struct node* root, int value) {
+    if (root == NULL)
+        return createNode(value);
+    if (value < root->data)
+        root->left = insert(root->left, value);
+    else if (value > root->data)
+        root->right = insert(root->right, value);
+    return root;
+}
+
+// Traversals
+void inorder(struct node* root) {
+    if (root) {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+
+void preorder(struct node* root) {
+    if (root) {
+        printf("%d ", root->data);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+void postorder(struct node* root) {
+    if (root) {
+        postorder(root->left);
+        postorder(root->right);
+        printf("%d ", root->data);
+    }
+}
+
+// Search for a value
+int search(struct node* root, int key) {
+    if (root == NULL)
+        return 0;
+    if (root->data == key)
+        return 1;
+    else if (key < root->data)
+        return search(root->left, key);
+    else
+        return search(root->right, key);
+}
+
+// Find minimum
+struct node* findMin(struct node* root) {
+    while (root && root->left != NULL)
+        root = root->left;
+    return root;
+}
+
+// Find maximum
+struct node* findMax(struct node* root) {
+    while (root && root->right != NULL)
+        root = root->right;
+    return root;
+}
+
+// Delete the entire tree
+void deleteTree(struct node* root) {
+    if (root) {
+        deleteTree(root->left);
+        deleteTree(root->right);
+        free(root);
+    }
+}
+
+// Count leaf nodes
+int countLeaf(struct node* root) {
+    if (root == NULL)
+        return 0;
+    if (root->left == NULL && root->right == NULL)
+        return 1;
+    return countLeaf(root->left) + countLeaf(root->right);
+}
+
+// Count non-leaf nodes
+int countNonLeaf(struct node* root) {
+    if (root == NULL || (root->left == NULL && root->right == NULL))
+        return 0;
+    return 1 + countNonLeaf(root->left) + countNonLeaf(root->right);
+}
+
+// Count all nodes
+int countNodes(struct node* root) {
+    if (root == NULL)
+        return 0;
+    return 1 + countNodes(root->left) + countNodes(root->right);
+}
+
+// Sum of all nodes
+int sumNodes(struct node* root) {
+    if (root == NULL)
+        return 0;
+    return root->data + sumNodes(root->left) + sumNodes(root->right);
+}
+
+// Find depth of tree
+int depth(struct node* root) {
+    if (root == NULL)
+        return 0;
+    int leftDepth = depth(root->left);
+    int rightDepth = depth(root->right);
+    return (leftDepth > rightDepth ? leftDepth : rightDepth) + 1;
+}
+
+// Print nodes at a given depth
+void printNodesAtDepth(struct node* root, int level, int depthLevel) {
+    if (root == NULL)
+        return;
+    if (level == depthLevel)
+        printf("%d ", root->data);
+    printNodesAtDepth(root->left, level + 1, depthLevel);
+    printNodesAtDepth(root->right, level + 1, depthLevel);
+}
+
+// Main function
+int main() {
+    struct node* root = NULL;
+    int choice, value, n, i;
+
+    do {
+        printf("\n------ Binary Search Tree Menu ------\n");
+        printf("0. Quit\n");
+        printf("1. Create\n");
+        printf("2. In-order Traversal\n");
+        printf("3. Pre-order Traversal\n");
+        printf("4. Post-order Traversal\n");
+        printf("5. Search\n");
+        printf("6. Find Smallest Element\n");
+        printf("7. Find Largest Element\n");
+        printf("8. Delete Tree\n");
+        printf("9. Count Leaf Nodes\n");
+        printf("10. Count Non-Leaf Nodes\n");
+        printf("11. Count All Nodes\n");
+        printf("12. Sum of All Nodes\n");
+        printf("13. Print Depth of Tree\n");
+        printf("14. Nodes at Maximum Depth\n");
+        printf("------------------------------------\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter number of elements: ");
+                scanf("%d", &n);
+                printf("Enter elements: ");
+                for (i = 0; i < n; i++) {
+                    scanf("%d", &value);
+                    root = insert(root, value);
+                }
+                break;
+
+            case 2:
+                printf("In-order traversal: ");
+                inorder(root);
+                printf("\n");
+                break;
+
+            case 3:
+                printf("Pre-order traversal: ");
+                preorder(root);
+                printf("\n");
+                break;
+
+            case 4:
+                printf("Post-order traversal: ");
+                postorder(root);
+                printf("\n");
+                break;
+
+            case 5:
+                printf("Enter element to search: ");
+                scanf("%d", &value);
+                if (search(root, value))
+                    printf("Element found.\n");
+                else
+                    printf("Element not found.\n");
+                break;
+
+            case 6:
+                if (root)
+                    printf("Smallest element: %d\n", findMin(root)->data);
+                else
+                    printf("Tree is empty.\n");
+                break;
+
+            case 7:
+                if (root)
+                    printf("Largest element: %d\n", findMax(root)->data);
+                else
+                    printf("Tree is empty.\n");
+                break;
+
+            case 8:
+                deleteTree(root);
+                root = NULL;
+                printf("Tree deleted successfully.\n");
+                break;
+
+            case 9:
+                printf("Number of leaf nodes: %d\n", countLeaf(root));
+                break;
+
+            case 10:
+                printf("Number of non-leaf nodes: %d\n", countNonLeaf(root));
+                break;
+
+            case 11:
+                printf("Total number of nodes: %d\n", countNodes(root));
+                break;
+
+            case 12:
+                printf("Sum of all nodes: %d\n", sumNodes(root));
+                break;
+
+            case 13:
+                printf("Depth of tree: %d\n", depth(root));
+                break;
+
+            case 14: {
+                int d = depth(root);
+                printf("Nodes at maximum depth (%d): ", d);
+                printNodesAtDepth(root, 1, d);
+                printf("\n");
+                break;
+            }
+
+            case 0:
+                printf("Exiting program...\n");
+                break;
+
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+
+    } while (choice != 0);
+
+    return 0;
+}
