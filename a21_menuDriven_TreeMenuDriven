@@ -1,0 +1,161 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *left, *right;
+};
+
+struct node* createNode(int value) {
+    struct node* newNode = (struct node*)malloc(sizeof(struct node));
+    newNode->data = value;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+struct node* insert(struct node* root, int value) {
+    if (root == NULL)
+        return createNode(value);
+    if (value < root->data)
+        root->left = insert(root->left, value);
+    else if (value > root->data)
+        root->right = insert(root->right, value);
+    return root;
+}
+
+void inorder(struct node* root) {
+    if (root) {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+
+void preorder(struct node* root) {
+    if (root) {
+        printf("%d ", root->data);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+void postorder(struct node* root) {
+    if (root) {
+        postorder(root->left);
+        postorder(root->right);
+        printf("%d ", root->data);
+    }
+}
+
+int search(struct node* root, int key) {
+    if (root == NULL)
+        return 0;
+    if (root->data == key)
+        return 1;
+    else if (key < root->data)
+        return search(root->left, key);
+    else
+        return search(root->right, key);
+}
+
+struct node* findMin(struct node* root) {
+    while (root && root->left)
+        root = root->left;
+    return root;
+}
+
+struct node* findMax(struct node* root) {
+    while (root && root->right)
+        root = root->right;
+    return root;
+}
+
+void deleteTree(struct node* root) {
+    if (root) {
+        deleteTree(root->left);
+        deleteTree(root->right);
+        free(root);
+    }
+}
+
+int main() {
+    struct node* root = NULL;
+    int choice, value, n, i;
+
+    do {
+        printf("\n------ Binary Search Tree Menu ------\n");
+        printf("0. Quit\n1. Create\n2. In-order Traversal\n3. Pre-order Traversal\n4. Post-order Traversal\n");
+        printf("5. Search\n6. Find Smallest Element\n7. Find Largest Element\n8. Delete Tree\n");
+        printf("------------------------------------\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter number of elements: ");
+                scanf("%d", &n);
+                printf("Enter elements: ");
+                for (i = 0; i < n; i++) {
+                    scanf("%d", &value);
+                    root = insert(root, value);
+                }
+                break;
+
+            case 2:
+                printf("In-order traversal: ");
+                inorder(root);
+                printf("\n");
+                break;
+
+            case 3:
+                printf("Pre-order traversal: ");
+                preorder(root);
+                printf("\n");
+                break;
+
+            case 4:
+                printf("Post-order traversal: ");
+                postorder(root);
+                printf("\n");
+                break;
+
+            case 5:
+                printf("Enter value to search: ");
+                scanf("%d", &value);
+                if (search(root, value))
+                    printf("Element found.\n");
+                else
+                    printf("Element not found.\n");
+                break;
+
+            case 6:
+                if (root)
+                    printf("Smallest element: %d\n", findMin(root)->data);
+                else
+                    printf("Tree is empty.\n");
+                break;
+
+            case 7:
+                if (root)
+                    printf("Largest element: %d\n", findMax(root)->data);
+                else
+                    printf("Tree is empty.\n");
+                break;
+
+            case 8:
+                deleteTree(root);
+                root = NULL;
+                printf("Tree deleted successfully.\n");
+                break;
+
+            case 0:
+                printf("Exiting...\n");
+                break;
+
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while (choice != 0);
+
+    return 0;
+}
